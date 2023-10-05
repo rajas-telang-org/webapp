@@ -14,7 +14,7 @@ jobs:
       mysql:
         image: mysql:latest
         env:
-          MYSQL_ROOT_PASSWORD: "Rajas@281097"
+          MYSQL_ROOT_PASSWORD: ${{ secrets.ROOT_PASSWORD }}
           MYSQL_DATABASE: "demo"
           MYSQL_ROOT_HOST: "%"
         ports:
@@ -36,8 +36,8 @@ jobs:
           echo port= 8080 >> .env
           echo host= localhost >> .env
           echo dialect= mysql >> .env
-          echo user= root >> .env
-          echo password= Rajas@281097 >> .env
+          echo user= ${{ secrets.USER }} >> .env
+          echo password= ${{ secrets.PASSWORD }} >> .env
           echo database= demo >> .env
       
       - name: Install dependencies
