@@ -87,7 +87,7 @@ export const updateAssignmentById = async (req, res) => {
     const { id } = req.params;
     const { name, points, num_of_attempts, deadline } = req.body;
     console.log(deadline);
-
+    // const parsedDeadline = new Date(deadline);
     const authenticatedUserId = req.user.id;
 
     // Finding the assignment to update
@@ -124,7 +124,12 @@ export const updateAssignmentById = async (req, res) => {
       assignment.num_of_attempts = num_of_attempts;
       updatedFields.push("num_of_attempts");
     }
-    if (deadline && assignment.deadline !== deadline) {
+    if (
+      deadline &&
+      JSON.stringify(assignment.deadline) !== JSON.stringify(deadline)
+      // assignment.deadline !== parsedDeadline
+    ) {
+      // console.log("assignment", assignment.deadline, "deadline", deadline);
       assignment.deadline = deadline;
       updatedFields.push("deadline");
     }
@@ -160,7 +165,7 @@ export const deleteAssignment = async (req, res) => {
     const { id } = req.params;
     const authenticatedUserId = req.user.id;
 
-    const assignment = await Assignment.findByPk({ where: { id } });
+    const assignment = await Assignment.findOne({ where: { id } });
 
     if (!assignment) {
       return res.status(404).json({ message: "assignment not found" });
