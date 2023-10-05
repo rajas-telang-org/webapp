@@ -18,7 +18,7 @@ router
   .put(basicAuth, assignmentController.updateAssignmentById);
 
 router.use((req, res) => {
-  res.status(405).send("hi");
+  res.status(405).send();
 });
 
 export default router;
