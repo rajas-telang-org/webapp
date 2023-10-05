@@ -16,7 +16,7 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: "Rajas@281097"
           MYSQL_DATABASE: "demo"
-          MYSQL_ROOT_HOST: "localhost"
+          MYSQL_ROOT_HOST: "%"
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -24,12 +24,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+      
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 18
-          
+          node-version: '18'
+      
       - name: create and configure
         run: |
           touch .env
@@ -39,9 +39,9 @@ jobs:
           echo user= root >> .env
           echo password= Rajas@281097 >> .env
           echo database= demo >> .env
-
+      
       - name: Install dependencies
         run: npm install
-
+      
       - name: Run tests
         run: npm test

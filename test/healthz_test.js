@@ -18,3 +18,8 @@ describe("/healthz API", () => {
       });
   });
 });
+
+after(() => {
+  console.log("test completed");
+  process.exit(0);
+});
