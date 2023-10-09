@@ -64,3 +64,5 @@ This project implements a REST API to manage assignments. The API allows authent
 ## Ensure the service is operational by checking the following endpoints:
 
     http://localhost:3000/healthz/: Should return "200 OK".
+
+test
