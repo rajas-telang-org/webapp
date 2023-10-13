@@ -34,7 +34,7 @@ jobs:
         run: |
           touch .env
           echo port= 8080 >> .env
-          echo host= localhost >> .env
+          echo host= 127.0.0.1 >> .env
           echo dialect= mysql >> .env
           echo user= ${{ secrets.USER }} >> .env
           echo password= ${{ secrets.PASSWORD }} >> .env
@@ -44,4 +44,11 @@ jobs:
         run: npm install
       
       - name: Run tests
+        env:
+          DB_HOST: ${{secrets.DB_HOST}}
+          DB_USER: ${{secrets.DB_USER}}
+          DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+          DB_NAME: ${{secrets.DB_NAME}}
+          DB_PORT: ${{secrets.DB_PORT }}
+          DB_DIALECT: ${{secrets.DB_DIALECT}}
         run: npm test

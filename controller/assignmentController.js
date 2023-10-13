@@ -6,7 +6,7 @@ export const createAssignment = async (req, res) => {
   try {
     const { name, points, num_of_attempts, deadline } = req.body;
     const user_id = req.user.id;
-    console.log("ndkjnvdnjvn", req.user);
+    // console.log(req.body)
 
     // 400 Bad Request for invalid input
     if (!name || !points || !num_of_attempts || !deadline) {
@@ -14,7 +14,6 @@ export const createAssignment = async (req, res) => {
         .status(400)
         .json({ message: "Invalid input: All fields are required" });
     }
-
     // 401 Unauthorized if user id is not present
     if (!req.user || !req.user.id) {
       return res.status(401).json({ message: "Unauthorized" });
@@ -27,20 +26,23 @@ export const createAssignment = async (req, res) => {
       num_of_attempts,
       deadline,
     });
-
-    res.status(201).json({
-      message: "Assignment created successfully",
-      data: newAssignment,
+    const createdAssignment = await Assignment.findByPk(newAssignment.id, {
+      attributes: {
+        exclude: ["user_id"],
+      },
     });
+
+    res.status(201).json(createdAssignment);
   } catch (error) {
     if (error.name === "SequelizeUniqueConstraintError") {
       return res
         .status(400)
         .json({ error: "Assignment with the same name already exists." });
     }
-    return res
-      .status(500)
-      .json({ message: "Server error", error: error.message });
+    if (error.name === "SequelizeValidationError") {
+      return res.status(400).json("Bad Request");
+    }
+    return res.status(500).json(error.name);
   }
 };
 
@@ -49,19 +51,20 @@ export const createAssignment = async (req, res) => {
 export const getAllAssignments = async (req, res) => {
   try {
     console.log("get alla mdasmc");
-    // const user_id = req.user.id;
-    const assignments = await Assignment.findAll({
-      // include: [
-      //   {
-      //     model: User,
-      //     as: "user",
-      //     attributes: ["id", "first_name", "last_name", "email"],
-      //   },
-      // ],
+    const user_id = req.user.id;
+    const assignments = await Assignment.findByPk(user_id, {
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "first_name", "last_name", "email"],
+        },
+      ],
+      attributes: {
+        exclude: ["user_id"], // Exclude the  column
+      },
     });
-    if (req.body && Object.keys(req.body).length > 0) {
-      return res.status(400).send();
-    }
+
     if (!assignments || assignments.length === 0) {
       return res.status(404).json({ message: "No assignments found" });
     }
@@ -74,9 +77,7 @@ export const getAllAssignments = async (req, res) => {
       data: assignments,
     });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Server error", error: error.message });
+    return res.status(401).json(error.message);
   }
 };
 
@@ -87,11 +88,16 @@ export const updateAssignmentById = async (req, res) => {
     const { id } = req.params;
     const { name, points, num_of_attempts, deadline } = req.body;
     console.log(deadline);
-    // const parsedDeadline = new Date(deadline);
+
     const authenticatedUserId = req.user.id;
 
     // Finding the assignment to update
-    const assignment = await Assignment.findOne({ where: { id } });
+    const assignment = await Assignment.findOne({
+      where: { id },
+      attributes: {
+        exclude: ["user_id"], // Exclude the  column
+      },
+    });
 
     if (!assignment) {
       return res.status(404).json({ message: "Assignment not found" });
@@ -124,22 +130,16 @@ export const updateAssignmentById = async (req, res) => {
       assignment.num_of_attempts = num_of_attempts;
       updatedFields.push("num_of_attempts");
     }
-    if (
-      deadline &&
-      JSON.stringify(assignment.deadline) !== JSON.stringify(deadline)
-      // assignment.deadline !== parsedDeadline
-    ) {
-      // console.log("assignment", assignment.deadline, "deadline", deadline);
+    if (deadline && assignment.deadline !== deadline) {
       assignment.deadline = deadline;
       updatedFields.push("deadline");
     }
 
     // If there are no changes
     if (updatedFields.length === 0) {
-      return res.status(200).json({
-        message: "No update is required. No changes in the input.",
-        data: assignment,
-      });
+      return res
+        .status(204)
+        .json("No update is required. No changes in the input.", assignment);
     }
 
     await assignment.save();
@@ -148,12 +148,10 @@ export const updateAssignmentById = async (req, res) => {
     res.status(200).json({
       message: "Assignment updated successfully",
       updatedFields,
-      data: assignment,
+      assignment,
     });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Server error", error: error.message });
+    return res.status(500).json(error.message);
   }
 };
 
@@ -173,8 +171,8 @@ export const deleteAssignment = async (req, res) => {
 
     if (assignment && assignment.user_id !== authenticatedUserId) {
       return res
-        .status(403)
-        .json({ message: "You are not allowed to delete this assignment" });
+        .status(401)
+        .json("You are not allowed to delete this assignment");
     }
 
     // Attempt to delete the assignment with the given ID
@@ -182,11 +180,9 @@ export const deleteAssignment = async (req, res) => {
       where: { id: id },
     });
 
-    res.status(200).json({ message: "Assignment deleted successfully" });
+    res.status(204).json({ message: "Assignment deleted successfully" });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Server error", error: error.message });
+    return res.status(500).json(error.message);
   }
 };
 
@@ -195,16 +191,17 @@ export const deleteAssignment = async (req, res) => {
 export const getAssignmentById = async (req, res) => {
   try {
     const { id } = req.params;
-    // const user_id = req.user.id;
+    const user_id = req.user.id;
     console.log(id);
 
-    const assg = await Assignment.findOne({ where: { id } });
+    const assg = await Assignment.findOne({
+      where: { id },
+      attributes: {
+        exclude: ["user_id"], // Exclude the  column
+      },
+    });
 
     console.log(assg);
-
-    if (req.body && Object.keys(req.body).length > 0) {
-      return res.status(400).send();
-    }
 
     // Check if assignment exists
     if (!assg) {

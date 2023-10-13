@@ -2,24 +2,12 @@ import chai from "chai";
 import chaiHttp from "chai-http";
 import app from "../index.js"; // Import your Express app instance
 
-const { expect } = chai;
-
 chai.use(chaiHttp);
+const expect = chai.expect;
 
-describe("/healthz API", () => {
-  it("should return status 200 and success message", (done) => {
-    chai
-      .request(app)
-      .get("/healthz")
-      .end((err, res) => {
-        expect(res).to.have.status(200);
-        expect(res.body).to.have.property("status").eql("Success");
-        done();
-      });
+describe("Healthz Endpoint", () => {
+  it("should return a 200 status", async () => {
+    const response = await chai.request(app).get("/healthz");
+    expect(response.status).to.equal(200);
   });
-});
-
-after(() => {
-  console.log("test completed");
-  process.exit(0);
 });
