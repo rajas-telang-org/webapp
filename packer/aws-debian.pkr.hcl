@@ -97,7 +97,6 @@ build {
       "sudo mv /tmp/.env /opt/.env",
       "sudo apt install unzip",
       "cd /opt",
-      "unzip webapp.zip",
       "sudo apt install nodejs npm",
       "sudo apt-get purge mariadb-server",
       "sudo apt update",
@@ -109,6 +108,7 @@ build {
       "CREATE DATABASE ${var.db_name}",
       "GRANT ALL PRIVILEGES ON ${var.db_name}.* TO '${var.db_user}'@'localhost' IDENTIFIED BY ${var.db_password}",
       "FLUSH PRIVILEGES",
+      "unzip webapp.zip",
 
     ]
   }
