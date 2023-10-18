@@ -30,7 +30,7 @@ variable "db_name" {
 
 variable "db_password" {
   type    = string
-  default = "demo"
+  default = "Rajas@281097"
 }
 
 variable "db_user" {
