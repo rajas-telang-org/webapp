@@ -18,6 +18,7 @@ jobs:
         id: setup
         with:
           version: "1.9.4"
+          shell: bash
 
       - name: Initialize Packer
         run: packer init ./packer/
