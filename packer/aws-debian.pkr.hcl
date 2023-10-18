@@ -104,10 +104,12 @@ build {
       "sudo systemctl start mariadb",
       "sudo systemctl enable mariadb",
       "mysql -u root",
+      "CREATE USER '${var.db_user}'@'localhost' IDENTIFIED BY '${var.db_password}'",
       "CREATE DATABASE ${var.db_name}",
-      "GRANT ALL PRIVILEGES ON ${var.db_name}.* TO '${var.db_user}'@'localhost' IDENTIFIED BY ${var.db_password}",
-      "FLUSH PRIVILEGES",
+      "GRANT ALL PRIVILEGES ON *.* TO $DB_USER@'localhost' WITH GRANT OPTION;",
+      "FLUSH PRIVILEGES;",
       "sudo unzip webapp.zip",
+      "sudo npm install",
 
     ]
   }
