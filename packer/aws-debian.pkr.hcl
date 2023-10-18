@@ -108,7 +108,7 @@ build {
       "CREATE DATABASE ${var.db_name}",
       "GRANT ALL PRIVILEGES ON ${var.db_name}.* TO '${var.db_user}'@'localhost' IDENTIFIED BY ${var.db_password}",
       "FLUSH PRIVILEGES",
-      "unzip webapp.zip",
+      "sudo unzip webapp.zip",
 
     ]
   }
