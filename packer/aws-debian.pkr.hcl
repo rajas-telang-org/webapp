@@ -94,7 +94,7 @@ build {
       "sudo apt-get upgrade -y",
       "sudo apt-get clean",
       "sudo mv /tmp/webapp.zip /opt/webapp.zip",
-      "sudo mv /tmp/.env /opt/webapp.zip",
+      "sudo mv /tmp/.env /opt/.env",
       "sudo apt install unzip",
       "cd /opt",
       "unzip webapp.zip",
