@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: 
       - main
-      - development
+      - dev
 
 jobs:
   connect-remote:
@@ -51,4 +51,35 @@ jobs:
           DB_NAME: ${{secrets.DB_NAME}}
           DB_PORT: ${{secrets.DB_PORT }}
           DB_DIALECT: ${{secrets.DB_DIALECT}}
+          
         run: npm test
+
+  packer:
+      name: CI Packer
+      runs-on: ubuntu-latest 
+
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+
+        - name: Download webapp repository
+          run: zip -r webapp.zip ./
+  
+        - name: create .env file
+          run: touch .env
+
+        - name: Setup Packer
+          uses: hashicorp/setup-packer@main
+          with:
+            packer_version: '1.9.4'
+
+        - name: Initialize Packer
+          run: packer init ./packer/
+
+        - name: Run `packer fmt `
+          run: |
+            packer fmt ./packer/
+
+        - name: Run `packer validate`
+          run: |
+            packer validate ./packer/aws-debian.pkr.hcl
