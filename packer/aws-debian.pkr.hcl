@@ -70,7 +70,7 @@ source "amazon-ebs" "my-ami" {
 }
 
 build {
-  name = "packer-debian"
+  name    = "packer-debian"
   sources = ["source.amazon-ebs.my-ami"]
 
   provisioner "file" {
@@ -86,31 +86,13 @@ build {
   provisioner "shell" {
     environment_vars = [
       "DEBIAN_FRONTEND=noninteractive",
-      "CHECKPOINT_DISABLE=1"
+      "CHECKPOINT_DISABLE=1",
+      "DB_USER=${var.db_user}",
+      "DB_NAME=${var.db_name}",
+      "DB_PASSWORD=${var.db_password}"
     ]
 
-    inline = [
-      "sudo apt-get update",
-      "sudo apt-get upgrade -y",
-      "sudo apt-get clean",
-      "sudo mv /tmp/webapp.zip /opt/webapp.zip",
-      "sudo mv /tmp/.env /opt/.env",
-      "sudo apt install -y unzip",
-      "cd /opt",
-      "sudo apt install -y nodejs npm",
-      "sudo apt-get purge mariadb-server",
-      "sudo apt update",
-      "sudo apt install -y mariadb-server",
-      "sudo systemctl start mariadb",
-      "sudo systemctl enable mariadb",
-      "sudo mysql -u root",
-      "CREATE USER 'rajas'@'localhost' IDENTIFIED BY '${var.db_password}';",
-      "CREATE DATABASE ${var.db_name};",
-      "GRANT ALL PRIVILEGES ON *.* TO 'rajas'@'localhost' WITH GRANT OPTION;",
-      "FLUSH PRIVILEGES;",
-      "sudo unzip webapp.zip",
-      "sudo npm install",
+    script = "./script/setup_script.sh"
 
-    ]
   }
 }
