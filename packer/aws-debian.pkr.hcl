@@ -106,7 +106,7 @@ build {
       "mysql -u root",
       "CREATE USER '${var.db_user}'@'localhost' IDENTIFIED BY '${var.db_password}'",
       "CREATE DATABASE ${var.db_name}",
-      "GRANT ALL PRIVILEGES ON *.* TO $DB_USER@'localhost' WITH GRANT OPTION;",
+      "GRANT ALL PRIVILEGES ON *.* TO '${var.db_user}'@'localhost' WITH GRANT OPTION;",
       "FLUSH PRIVILEGES;",
       "sudo unzip webapp.zip",
       "sudo npm install",
