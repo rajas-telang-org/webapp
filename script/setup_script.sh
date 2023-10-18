@@ -36,18 +36,17 @@ sudo apt install -y mariadb-server
 sudo systemctl start mariadb
 sudo systemctl enable mariadb
 
+
 # Access MySQL and execute SQL commands
-sudo mysql -u root"
-    CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
-    CREATE DATABASE $DB_NAME;
-    GRANT ALL PRIVILEGES ON *.* TO '$DB_USER'@'localhost' WITH GRANT OPTION;
-    FLUSH PRIVILEGES;
-"
+sudo mysql -u root << EOF
+CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
+CREATE DATABASE $DB_NAME;
+GRANT ALL PRIVILEGES ON *.* TO '$DB_USER'@'localhost' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+EOF
 
 # Unzip webapp.zip
 sudo unzip webapp.zip
 
 # Install Node.js dependencies
 sudo npm install
-
-EOF
