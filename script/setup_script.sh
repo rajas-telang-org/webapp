@@ -37,6 +37,7 @@ sudo systemctl start mariadb
 sudo systemctl enable mariadb
 
 
+
 # Access MySQL and execute SQL commands
 sudo mysql -u root << EOF
 CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
@@ -44,6 +45,14 @@ CREATE DATABASE $DB_NAME;
 GRANT ALL PRIVILEGES ON *.* TO '$DB_USER'@'localhost' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 EOF
+
+touch .env
+    echo port= '8080' >> .env
+    echo host= '127.0.0.1' >> .env
+    echo dialect= 'mysql' >> .env
+    echo user= $DB_USER >> .env
+    echo password= $DB_PASSWORD >> .env
+    echo database= $DB_NAME >> .env
 
 # Unzip webapp.zip
 sudo unzip webapp.zip
