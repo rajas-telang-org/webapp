@@ -52,30 +52,28 @@ export const getAllAssignments = async (req, res) => {
   try {
     console.log("get alla mdasmc");
     const user_id = req.user.id;
-    const assignments = await Assignment.findByPk(user_id, {
-      include: [
-        {
-          model: User,
-          as: "user",
-          attributes: ["id", "first_name", "last_name", "email"],
+
+    const assignments = await Assignment.findAll(
+      // user_id,
+      {
+        // include: [
+        //   {
+        //     model: User,
+        //     as: "user",
+        //     attributes: ["id", "first_name", "last_name", "email"],
+        //   },
+        // ],
+        attributes: {
+          exclude: ["user_id"], // Exclude the  column
         },
-      ],
-      attributes: {
-        exclude: ["user_id"], // Exclude the  column
-      },
-    });
+      }
+    );
 
     if (!assignments || assignments.length === 0) {
       return res.status(404).json({ message: "No assignments found" });
     }
 
-    console.log(assignments);
-
-    res.status(200).json({
-      status: "success",
-      message: "Assignments fetched successfully",
-      data: assignments,
-    });
+    res.status(200).json(assignments);
   } catch (error) {
     return res.status(401).json(error.message);
   }
