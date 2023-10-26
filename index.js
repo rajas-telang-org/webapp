@@ -1,3 +1,4 @@
+#!/usr/bin/node
 import express from "express";
 import sequelize from "./config/database.js";
 
