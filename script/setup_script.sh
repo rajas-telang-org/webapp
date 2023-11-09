@@ -62,7 +62,7 @@ sudo sh -c 'echo "{
             \"file_path\": \"/var/log/csye6225.log\",
             \"log_group_name\": \"csye6225\",
             \"log_stream_name\": \"webapp\"
-          }
+          },
           {
             \"file_path\": \"/var/log/csye6225err.log\",
             \"log_group_name\": \"csye6225\",
