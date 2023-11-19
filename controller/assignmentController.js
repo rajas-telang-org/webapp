@@ -3,11 +3,11 @@ import sequelize from "../config/database.js";
 import User from "../model/UserModel.js";
 //import SDC from "statsd-client";
 //const statsd = require("statsd-client");
-import { StatsD } from "node-statsd";
+
 //sdc = new SDC({ host: "statsd.example.com" });
 import { logger, logger_err } from "../logger.js";
 import { JSON, json } from "sequelize";
-export const client = new StatsD({ host: "localhost", port: 8125 });
+import client from "../utils/Statsd.js";
 
 export const createAssignment = async (req, res) => {
   client.increment("api.hits.createAssignment");
