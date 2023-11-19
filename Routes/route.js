@@ -3,6 +3,7 @@ import basicAuth from "../Authentication/basicAuth.js";
 import * as assignmentController from "../controller/assignmentController.js";
 import { logger } from "../logger.js";
 // const assignmentController = require('../controller/assignmentController.js');
+import * as submissionController from "../controller/submissionController.js";
 
 const router = express.Router();
 
@@ -21,6 +22,9 @@ router
 router
   .route("/assignments/:id")
   .put(basicAuth, assignmentController.updateAssignmentById);
+router
+  .route("/assignments/:id/submissions")
+  .post(submissionController.createSubmission);
 
 router.use((req, res) => {
   res.status(405).send();
