@@ -9,7 +9,8 @@ import Assignment from "./model/AssignmentModel.js";
 import processCSVFile from "./dataImport.js";
 import router from "./Routes/route.js";
 import { logger, logger_err } from "./logger.js";
-import { client } from "./controller/assignmentController.js";
+// import { client } from "./controller/assignmentController.js";
+import client from "./utils/Statsd.js";
 // import dotenv from "dotenv";
 // dotenv.config();
 // console.log(process.env);
@@ -46,12 +47,30 @@ try {
       createDatabase: true,
     },
   });
+
   console.log("Database sync completed successfully.");
   logger.info("Database sync completed successfully.");
 } catch (error) {
   console.error("Error while syncing database:\n", error);
   logger_err.error("Error while syncing database: " + error.message);
 }
+
+app.use("/v1/assignment/:id", router);
+try {
+  await sequelize.sync({
+    alter: true,
+    dialectOptions: {
+      createDatabase: true,
+    },
+  });
+
+  console.log("Database sync completed successfully.");
+  logger.info("Database sync completed successfully.");
+} catch (error) {
+  console.error("Error while syncing database:\n", error);
+  logger_err.error("Error while syncing database: " + error.message);
+}
+
 processCSVFile();
 
 sequelize.sync().then(() => {
