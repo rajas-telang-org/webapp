@@ -66,3 +66,6 @@ This project implements a REST API to manage assignments. The API allows authent
 ## Ensure the service is operational by checking the following endpoints:
 
     http://localhost:3000/healthz/: Should return "200 OK".
+
+### to import the ssl certificate here is the command
+aws acm import-certificate --certificate fileb:///Users/rajastelang/Desktop/ssl/demo_rajastelang_me/demo_rajastelang_me.crt --private-key fileb:///Users/rajastelang/Desktop/ssl/rajasprivate.pem --certificate-chain fileb:///Users/rajastelang/Desktop/ssl/demo_rajastelang_me/demo_rajastelang_me.ca-bundle
