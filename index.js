@@ -55,7 +55,7 @@ try {
   logger_err.error("Error while syncing database: " + error.message);
 }
 
-app.use("/v1/assignment/:id", router);
+app.use("/v2/assignment/:id", router);
 try {
   await sequelize.sync({
     alter: true,
