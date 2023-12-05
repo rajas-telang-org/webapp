@@ -46,6 +46,7 @@ jobs:
         run: packer build ./packer/aws-debian.pkr.hcl
 
       - name: Modify Launch Template version with latest AMI
+        id: ami
         run: |
           echo "::set-output name=ami_id::$(aws ec2 describe-images --filters 'Name=name,Values=csye6225*' --query 'Images[0].ImageId' --output text)"
      
@@ -54,7 +55,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.DEMO_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.DEMO_AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: ${{ secrets.DEMO_AWS_REGION }}
 
       - name: Creating Launch Template Version
         run: |
