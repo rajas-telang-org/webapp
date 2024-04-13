@@ -13,10 +13,6 @@ const sequelize = new Sequelize(
   }
 );
 
-// const sequelize = new Sequelize('demo', 'root', 'Rajas@281097', {
-//   host: 'localhost',
-//   dialect: 'mysql',
-// });
 
 // console.log(process.env.DB_USER);
 export default sequelize;
